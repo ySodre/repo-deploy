@@ -1,15 +1,13 @@
 name: Deploy Fake
 on:
-    workflow_call:
-        secrets:
-            ambiente:
-                required: true
-                description: "Ambiente de deploy"
+  repository_dispatch:
+    types:
+      - deploy-remoto
 jobs:
     deploy-kubernetes:
         runs-on: ubuntu-latest
         steps:
            - name: Deploy no ambiente
-             run: echo "Executando o deploy no ambiente de ${{ secrets.ambiente }}"
+             run: echo "Executando o deploy no ambiente de ${{ github.event.client_payload.ambiente }}"
            - name: Curl deploy no ambiente
-             run: "curl -X POST https://webhook.site/f5a106f5-f7ca-4b59-b921-65d91085ebaf -d '{ ambiente: ${{secrets.ambiente }} }'"
+             run: "curl -X POST https://webhook.site/f5a106f5-f7ca-4b59-b921-65d91085ebaf -d '{ ambiente: ${{ github.event.client_payload.ambiente }} }'"
